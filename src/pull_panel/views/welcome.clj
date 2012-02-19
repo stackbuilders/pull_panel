@@ -15,18 +15,24 @@
   (session/flash-put! (str "Deleted repo " user "/" repo) )
   (resp/redirect "/"))
 
+
+
+(defn pull-list [pulls]
+  (page-helpers/ordered-list (map #(page-helpers/link-to (% "html_url") (% "body")) pulls)))
+
 (defn format-pull-structure [pulls]
   (if (map? pulls)
     pulls
     (if (empty? pulls)
-      "No open pulls"
-      pulls)))
+      " No open pulls"
+      (pull-list pulls))))
 
 (defn linked-repo [org repo pulls token]
   [:p 
-   [:a {:href (str "https://github.com/" org "/" repo)} (str org "/" repo ": "
-                                                             (format-pull-structure pulls) " ") ]
-   [:a {:href (str "/repos/delete?user=" org "&repo=" repo "&token=" token) } "(Unwatch)"]])
+   [:a {:href (str "https://github.com/" org "/" repo)} org "/" repo " "]
+   [:a {:href (str "/repos/delete?user=" org "&repo=" repo "&token=" token) } "(Unwatch)"]
+   [:span.pulls (format-pull-structure pulls) ]
+])
 
 (defn pulls-for [user repo token]
   (let [pull-url (str "https://api.github.com/repos/" user "/" repo "/pulls?access_token=" token)]
