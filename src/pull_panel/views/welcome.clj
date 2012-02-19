@@ -15,10 +15,18 @@
   (session/flash-put! (str "Deleted repo " user "/" repo) )
   (resp/redirect "/"))
 
+(defn format-pull-structure [pulls]
+  (if (map? pulls)
+    pulls
+    (if (empty? pulls)
+      "No open pulls"
+      pulls)))
+
 (defn linked-repo [org repo pulls token]
   [:p 
-   [:a {:href (str "https://github.com/" org "/" repo)} (str org "/" repo " - pulls: " (count pulls) " ") ]
-   [:a {:href (str "/repos/delete?user=" org "&repo=" repo "&token=" token) } "(Delete)"]])
+   [:a {:href (str "https://github.com/" org "/" repo)} (str org "/" repo ": "
+                                                             (format-pull-structure pulls) " ") ]
+   [:a {:href (str "/repos/delete?user=" org "&repo=" repo "&token=" token) } "(Unwatch)"]])
 
 (defn pulls-for [user repo token]
   (let [pull-url (str "https://api.github.com/repos/" user "/" repo "/pulls?access_token=" token)]
