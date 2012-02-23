@@ -76,7 +76,7 @@
 (defpage "/auth/github" []
   (resp/redirect
    (str "https://github.com/login/oauth/authorize?"
-        "client_id=666cd88453afcf920804&"
+        "client_id=" (get (System/getenv) "GITHUB_CLIENT_ID") "&"
         "redirect_uri=https://pullpanel.herokuapp.com/auth/github-callback&"
         "scope=repo")))
 
@@ -105,8 +105,8 @@
 
 (defpage "/auth/github-callback" {:keys [code]}
   (let [res (client/post "https://github.com/login/oauth/access_token"
-                         {:form-params {:client_id "666cd88453afcf920804"
-                                        :client_secret "7847bee8ba503fadb9b6f65d1dce4fbf4d336762"
+                         {:form-params {:client_id (get (System/getenv) "GITHUB_CLIENT_ID")
+                                        :client_secret (get (System/getenv) "GITHUB_SECRET")
                                         :code code }
                           :accept :json})]
     ((session/put! :token ((json/parse-string (res :body)) "access_token"))

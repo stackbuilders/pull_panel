@@ -5,6 +5,9 @@ on one screen.
 
 ## Usage
 
+You must first register this as a github application in order to use Oauth, and set environment variables
+for GITHUB_CLIENT_ID and GITHUB_SECRET.
+
 ```bash
 lein deps
 lein run
