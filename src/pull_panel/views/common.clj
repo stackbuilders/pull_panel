@@ -1,7 +1,7 @@
 (ns pull-panel.views.common
   (:use [noir.core :only [defpartial]]
         [hiccup.page-helpers :only [include-css include-js html5]])
-  (:require [noir.session :as session] ))
+  (:require [noir.session :as session]))
 
 (defpartial site-layout [& content]
   (html5
@@ -12,6 +12,7 @@
     (include-css "css/application.css")
     (include-css "css/bootstrap-responsive.css")
     (include-js "js/jquery-1.7.1.min.js")
+    (include-js "js/main.js")
     (include-js "js/bootstrap.js")]
    [:body
     [:div.navbar.navbar-fixed-top
