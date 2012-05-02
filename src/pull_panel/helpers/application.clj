@@ -13,10 +13,10 @@
       " No open pulls"
       (pull-list pulls))))
 
-(defn linked-repo [org repo pulls token]
+(defn linked-repo [watch pulls]
   [:p
    [:a {:href (str "https://github.com/" org "/" repo)} org "/" repo " "]
-   [:a {:href (str "/repos?user=" org "&repo=" repo "&token=" token "&_method=DELETE" ) } "(Unwatch)"]
+   [:a {:href "#" :data-id 44 } "(Unwatch)"]
    [:span.pulls (format-pull-structure pulls)]])
 
 (defn repo-html-list [repos token all-pulls all-watches]

@@ -18,11 +18,18 @@
   (sql/with-connection (database-url)
     (sql/insert-values :watches [:username :owner :repo] [username owner repo])))
 
+(defrecord User [id name])
+
+(defrecord Watch [id owner repo])
+
 (defn create-watches-schema []
   (sql/with-connection (database-url)
-    (sql/create-table :watches
-                      [:id :serial "PRIMARY KEY"]
+    (sql/create-table :users
+                      [:user_id :serial "PRIMARY KEY"]
                       [:username :varchar "NOT NULL"]
+                      [:created_at :timestamp "NOT NULL" "DEFAULT CURRENT_TIMESTAMP"])
+    (sql/create-table :watches
+                      [:watch_id :serial "PRIMARY KEY"]
                       [:owner :varchar "NOT NULL"]
                       [:repo :varchar "NOT NULL"]
                       [:created_at :timestamp "NOT NULL" "DEFAULT CURRENT_TIMESTAMP"])))

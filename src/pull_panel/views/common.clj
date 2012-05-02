@@ -15,6 +15,7 @@
     (include-js "js/main.js")
     (include-js "js/bootstrap.js")]
    [:body
+    [:div.meat]
     [:div.navbar.navbar-fixed-top
      [:div.navbar-inner
       [:div.container
