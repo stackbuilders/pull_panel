@@ -31,9 +31,14 @@
        "redirect_uri=https://pullpanel.herokuapp.com/auth/github-callback&"
        "scope=repo"))
 
+(defn github-url []
+  (get (System/getenv) "GITHUB_URL" "https://api.github.com/"))
+
+(defn pull-url [watch token]
+  (str (github-url) (watch :owner) "/" (watch :id) "/pulls?access_token=" token))
+
 (defn pulls-for [watch token]
-  (let [pull-url (str "https://api.github.com/repos/" (watch :owner) "/" (watch :id) "/pulls?access_token=" token)]
-    [(watch :owner) (watch :repo) (json/parse-string ((client/get pull-url {:accept :json :throw-exceptions false}) :body))]))
+  [(watch :owner) (watch :repo) (json/parse-string ((client/get (pull-url watch token)  {:accept :json :throw-exceptions false}) :body))])
 
 (defn all-pulls [watches token]
   (map #(pulls-for % token) watches))
