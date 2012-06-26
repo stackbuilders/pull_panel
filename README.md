@@ -6,11 +6,12 @@ on one screen.
 ## Usage
 
 You must first register this as a github application in order to use Oauth, and set environment variables
-for GITHUB_CLIENT_ID and GITHUB_SECRET.
+for GITHUB_CLIENT_ID and GITHUB_SECRET. For development mode you have to set your app "Callback URL" on GitHub
+to `http://lvh.me:8080`. This domain points to `127.0.0.1` and OAuth integration becomes a piece of cake.
 
 ```bash
 lein deps
-lein run
+GITHUB_CLIENT_ID=XXX GITHUB_SECRET=XXX lein run
 ```
 
 ## License

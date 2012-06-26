@@ -1,7 +1,8 @@
 (ns pull-panel.views.welcome
   (:require [pull-panel.views.common :as common])
   (:use [noir.core :only [defpage]]
-        [hiccup.core :only [html]])
+        [hiccup.core :only [html]]
+        [noir.options :only [dev-mode?]])
   (:require [noir.response :as resp]
             [clj-http.client :as client]
             [noir.session :as session]
@@ -14,6 +15,10 @@
   (session/put! :repos (remove #{[user repo]} (session/get :repos)))
   (session/flash-put! (str "Deleted repo " user "/" repo) )
   (resp/redirect "/"))
+
+(defn github-auth-callback-host []
+  "When server is started in development mode it returns lvh.me URL that points to 127.0.0.1"
+  (if (dev-mode?) "http://lvh.me:8080" "https://pullpanel.herokuapp.com"))
 
 (defn pull-list [pulls]
   (page-helpers/ordered-list (map #(page-helpers/link-to (% "html_url") (% "body")) pulls)))
@@ -77,7 +82,7 @@
   (resp/redirect
    (str "https://github.com/login/oauth/authorize?"
         "client_id=" (get (System/getenv) "GITHUB_CLIENT_ID") "&"
-        "redirect_uri=https://pullpanel.herokuapp.com/auth/github-callback&"
+        "redirect_uri=" (github-auth-callback-host) "/auth/github-callback&"
         "scope=repo")))
 
 (defn delete-repo-form [user repo]
@@ -95,12 +100,6 @@
 (defpage "/logout" []
   (session/clear!)
   (session/flash-put! "You have been logged out")
-  (resp/redirect "/"))
-
-(defpage "/set-token" {:keys [token]}
-  "Hacky for testing: set the API token given to your app for local testing"
-  (session/put! :token token)
-  (session/flash-put! (str "Set token to " token) )
   (resp/redirect "/"))
 
 (defpage "/auth/github-callback" {:keys [code]}
